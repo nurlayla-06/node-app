@@ -2,13 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                // Pastikan URL Git benar dan tanpa spasi
-                git url: 'https://github.com/nurlayla-06/node-app.git'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'npm install'
@@ -17,7 +10,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm test' // pastikan ada script "test" di package.json
+                sh 'npm test'
             }
         }
 
