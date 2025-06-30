@@ -1,41 +1,57 @@
 pipeline {
-    agent {
-        docker { image 'node:18' }
+    agent any  // Gunakan host Jenkins, bukan container docker
+
+    environment {
+        NODE_ENV = 'development'
     }
 
     stages {
-        stage('Clone Repository') {
+        stage('Checkout') {
             steps {
-                echo '🔄 Meng-clone repository...'
+                echo '🔄 Clone repository dari GitHub...'
                 git url: 'https://github.com/nurlayla-06/node-app.git', branch: 'main'
             }
         }
 
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo '🔧 Tahap build berjalan.'
+                echo '📦 Install dependencies via npm...'
                 sh 'npm install'
             }
         }
 
-        stage('Test') {
+        stage('Lint (Opsional)') {
             steps {
-                echo '🧪 Tes unit berjalan (simulasi).'
+                echo '🔍 Menjalankan linter...'
+                sh 'npm run lint || true'  // Bisa di-skip kalau tidak ada skrip lint
+            }
+        }
+
+        stage('Run Unit Test') {
+            steps {
+                echo '🧪 Menjalankan unit test...'
                 sh 'npm test'
             }
             post {
                 success {
-                    echo '✅ Tes berhasil!'
+                    echo '✅ Test berhasil'
                 }
                 failure {
-                    echo '❌ Tes gagal!'
+                    echo '❌ Test gagal'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Build (Opsional)') {
             steps {
-                echo '🚀 Menjalankan aplikasi...'
+                echo '⚙️ Build aplikasi...'
+                sh 'npm run build || echo "Tidak ada perintah build"'
+            }
+        }
+
+        stage('Deploy (Simulasi)') {
+            steps {
+                echo '🚀 Menjalankan aplikasi Node.js...'
                 sh 'nohup node app.js &'
             }
         }
