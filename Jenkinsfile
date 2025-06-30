@@ -5,7 +5,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 // Pastikan URL Git benar dan tanpa spasi
-                git url: 'https://github.com/namauser/node-app.git'
+                git url: 'https://github.com/nurlayla-06/node-app.git'
             }
         }
 
