@@ -9,7 +9,6 @@ pipeline {
 
     stages {
         stage('Clone Repository') {
-            049e42a (Initial commit with Jenkinsfile)
             steps {
                 git url: 'https://github.com/nurlayla-06/node-app.git', branch: 'main'
             }
@@ -19,7 +18,6 @@ pipeline {
             steps {
                 echo 'Tahap build berjalan.'
                 sh 'npm install'
-                049e42a (Initial commit with Jenkinsfile)
             }
         }
 
@@ -41,7 +39,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Menjalankan aplikasi...'
-                sh 'nohup node app.js &'049e42a (Initial commit with Jenkinsfile)
+                sh 'nohup node app.js &'
             }
         }
     }
