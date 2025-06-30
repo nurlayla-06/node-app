@@ -1,65 +1,40 @@
 pipeline {
-    agent any  // Gunakan host Jenkins, bukan container docker
-
-    environment {
-        NODE_ENV = 'development'
-    }
+    agent any
 
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                echo '🔄 Clone repository dari GitHub...'
-                git url: 'https://github.com/nurlayla-06/node-app.git', branch: 'main'
+                // Pastikan URL Git benar dan tanpa spasi
+                git url: 'https://github.com/namauser/node-app.git'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Build') {
             steps {
-                echo '📦 Install dependencies via npm...'
                 sh 'npm install'
             }
         }
 
-        stage('Lint (Opsional)') {
+        stage('Test') {
             steps {
-                echo '🔍 Menjalankan linter...'
-                sh 'npm run lint || true'  // Bisa di-skip kalau tidak ada skrip lint
+                sh 'npm test' // pastikan ada script "test" di package.json
             }
         }
 
-        stage('Run Unit Test') {
+        stage('Deploy') {
             steps {
-                echo '🧪 Menjalankan unit test...'
-                sh 'npm test'
-            }
-            post {
-                success {
-                    echo '✅ Test berhasil'
-                }
-                failure {
-                    echo '❌ Test gagal'
-                }
-            }
-        }
-
-        stage('Build (Opsional)') {
-            steps {
-                echo '⚙️ Build aplikasi...'
-                sh 'npm run build || echo "Tidak ada perintah build"'
-            }
-        }
-
-        stage('Deploy (Simulasi)') {
-            steps {
-                echo '🚀 Menjalankan aplikasi Node.js...'
-                sh 'nohup node app.js &'
+                echo 'Menjalankan aplikasi...'
+                sh 'nohup node app.js > output.log 2>&1 &'
             }
         }
     }
 
     post {
-        always {
-            echo '🏁 Pipeline selesai.'
+        success {
+            echo 'Pipeline selesai dengan sukses!'
+        }
+        failure {
+            echo 'Pipeline gagal pada salah satu tahap.'
         }
     }
 }
